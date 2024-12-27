@@ -21,23 +21,19 @@ class SimpleNavigationServer(Node):
     async def execute_callback(self, goal_handle):
         self.get_logger().info('Received goal request...')
         
-        # Create feedback message
+        
         feedback_msg = NavigateToPose.Feedback()
         
-        # Simulate navigation by waiting for a few seconds
         for _ in range(3):
             if not goal_handle.is_active:
                 goal_handle.abort()
                 return NavigateToPose.Result()
                 
-            # Simulate some work
             time.sleep(1)
             
-            # Send feedback
             feedback_msg.current_pose = goal_handle.request.pose
             goal_handle.publish_feedback(feedback_msg)
             
-        # Randomly decide if the goal was reached successfully (80% success rate)
         success = random.random() < 0.8
         
         if success:
@@ -47,7 +43,6 @@ class SimpleNavigationServer(Node):
             goal_handle.abort()
             self.get_logger().info('Goal_Failed')
             
-        # Return empty result as specified in the NavigateToPose action
         return NavigateToPose.Result()
 
 def main(args=None):
